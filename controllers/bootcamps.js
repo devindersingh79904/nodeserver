@@ -1,5 +1,3 @@
-
-
 exports.getBootcamps = (req,res,next) => {
     res.status(200).json({success:true,msg : "show all bootcames"})
 } 
@@ -19,3 +17,4 @@ exports.putBootcamp = (req,res,next) => {
 exports.deleteBootcamp = (req,res,next) => {
     res.status(200).json({success:true,msg : `delete bootcamp ${req.params.id}`})
 }
+
