@@ -9,7 +9,7 @@ exports.getBootcamp = (req,res,next) => {
 }
 
 exports.postBootcamp = (req,res,next) => {
-    res.status(200).json({success:true,msg : `add bootcamp ${req.params.id}`})
+    res.status(201).json({success:true,msg : `add bootcamp`})
 }
 
 exports.putBootcamp = (req,res,next) => {

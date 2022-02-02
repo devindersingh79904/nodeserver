@@ -3,11 +3,8 @@ const { getBootcamps, getBootcamp, postBootcamp, putBootcamp, deleteBootcamp } =
 
 const router = express.Router();
 
-router.get('/',getBootcamps);
+router.route("/").get(getBootcamps).post(postBootcamp)
 
-router.get('/:id',getBootcamp);
-router.post('/:id',postBootcamp);
-router.put('/:id',putBootcamp);
-router.delete('/:id',deleteBootcamp);
+router.route("/:id").get(getBootcamp).put(putBootcamp).delete(deleteBootcamp)
 
 module.exports = router
