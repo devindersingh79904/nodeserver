@@ -6,6 +6,7 @@ const colors = require('colors');
 //Route files
 const bootcamps = require('./routes/bootcamps');
 const DBConnect = require('./middleware/db');
+const errorHandler = require('./middleware/errorhandler');
 
 dotenv.config({ path: './config/config.env'});
 DBConnect()
@@ -18,7 +19,7 @@ if(process.env.NODE_ENV === 'development'){
 
 
 app.use('/api/v1/bootcamps',bootcamps)
-
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 8000
-app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} on port ${PORT} .`.green.bold))
+app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} on port ${PORT} .`.yellow.bold))
