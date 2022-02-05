@@ -1,8 +1,14 @@
 const SERVER_ERROR = 500
-const CREATED = 201
 const SUCCESS=200
+const CREATED = 201
+const BAD_REQUEST=400
+const NOT_FOUND=404
+const NOT_AUTHENTICATED=401
 module.exports = {
     SERVER_ERROR,
     CREATED,
-    SUCCESS
+    SUCCESS,
+    BAD_REQUEST,
+    NOT_AUTHENTICATED,
+    NOT_FOUND
 }

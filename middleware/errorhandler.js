@@ -1,10 +1,15 @@
 const { SERVER_ERROR } = require("../Utils/httpConst");
 
 const errorHandler = (err,req,res,next) => {
-    console.log(err)
-   res.status(err.statusCode || SERVER_ERROR).json({
+    const error = {...err}
+
+    console.log(err.stack.red)
+    console.log(`${err}`.yellow)
+
+
+    res.status(error.statusCode || SERVER_ERROR).json({
        sucess : false,
-       error:err.message
+       error:error.message
    })
 }
 

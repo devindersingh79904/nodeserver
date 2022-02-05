@@ -1,7 +1,7 @@
 const asyncHandler = require("../middleware/asyncHandler")
 const Bootcamp = require("../models/Bootcamp")
 const ErrorResponse = require("../Utils/ErrorResponse")
-const { CREATED, SUCCESS } = require("../Utils/httpConst")
+const { CREATED, SUCCESS, NOT_FOUND } = require("../Utils/httpConst")
 
 
 exports.getBootcamps = asyncHandler(async(req,res,next) => {
@@ -17,7 +17,7 @@ exports.getBootcamp = asyncHandler(async(req,res,next) => {
         if(bootcamp == null){
             return next(new ErrorResponse(`No bootcamp find with id ${id}`,404))
         }
-        res.status(200).json({success:true,data:bootcamp})
+        res.status(SUCCESS).json({success:true,data:bootcamp})
         
 
 })
@@ -45,8 +45,8 @@ exports.deleteBootcamp = asyncHandler(async(req,res,next) => {
     const bootcamp = await Bootcamp.findByIdAndDelete(id)
 
     if(bootcamp == null){
-        return next(new ErrorResponse(`No bootcamp find with id ${id}`,404))
+        return next(new ErrorResponse(`No bootcamp find with id ${id}`,NOT_FOUND))
     }
-    res.status(200).json({success:true,msg:'bootcamp deleted succesfully'})
+    res.status(SUCCESS).json({success:true,msg:'bootcamp deleted succesfully'})
 })
 
