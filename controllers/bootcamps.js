@@ -15,7 +15,7 @@ exports.getBootcamp = asyncHandler(async(req,res,next) => {
         const id = req.params.id;
         const bootcamp = await Bootcamp.findById(id)
         if(bootcamp == null){
-            return next(new ErrorResponse(`No bootcamp find with id ${id}`,404))
+            return next(new ErrorResponse(`No bootcamp find with id ${id}`,NOT_FOUND))
         }
         res.status(SUCCESS).json({success:true,data:bootcamp})
         
@@ -34,9 +34,16 @@ exports.postBootcamp = asyncHandler(async(req,res,next) => {
 })
 
 exports.putBootcamp = asyncHandler(async(req,res,next) => {
-
     const id = req.params.id;
-    res.status(200).json({success:true,msg : `put bootcamp ${req.params.id}`})
+    const bootcamp = await Bootcamp.findByIdAndUpdate(id,req.body,{
+        new:true,
+        runValidators:true
+    })
+
+    if(bootcamp == null){
+        return next(new ErrorResponse(`No bootcamp find with id ${id}`,NOT_FOUND))
+    }
+    res.status(SUCCESS).json({success:true,data:bootcamp})
 })
 
 exports.deleteBootcamp = asyncHandler(async(req,res,next) => {
