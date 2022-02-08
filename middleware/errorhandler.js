@@ -5,7 +5,7 @@ const { SERVER_ERROR, NOT_FOUND, BAD_REQUEST } = require("../Utils/httpConst");
 const errorHandler = (err,req,res,next) => {
     let error = {...err}
     error.message = err.message;
-
+ 
     console.log(err)
     console.log(err.name)
 
