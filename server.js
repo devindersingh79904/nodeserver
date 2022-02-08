@@ -3,12 +3,14 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
 
+dotenv.config({ path: './config/config.env'});
 //Route files
+
 const bootcamps = require('./routes/bootcamps');
 const DBConnect = require('./middleware/db');
 const errorHandler = require('./middleware/errorhandler');
 
-dotenv.config({ path: './config/config.env'});
+
 DBConnect()
 
 const app = express();
