@@ -7,7 +7,7 @@ const { CREATED, SUCCESS, NOT_FOUND } = require("../Utils/httpConst")
 exports.getBootcamps = asyncHandler(async(req,res,next) => {
 
     const bootcamps = await Bootcamp.find();
-    res.status(SUCCESS).json({success:true,data:bootcamps})
+    res.status(SUCCESS).json({success:true,count:bootcamps.length, data:bootcamps})
 } )
 
 exports.getBootcamp = asyncHandler(async(req,res,next) => {

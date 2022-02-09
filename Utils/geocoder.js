@@ -5,8 +5,6 @@ const options = {
     provider : process.env.PROVIDER
 }
 
-console.log(process.env)
-console.log(options)
 const geocoder = nodeGeocoder(options);
 
 module.exports = geocoder
