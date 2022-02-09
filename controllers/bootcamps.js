@@ -5,14 +5,14 @@ const geocoder = require("../Utils/geocoder")
 const { CREATED, SUCCESS, NOT_FOUND } = require("../Utils/httpConst")
 
 
-exports.getBootcamps = asyncHandler(async(req,res,next) => {
-
+exports.getBootcamps = asyncHandler(async(req,res,next) => {    
+    const query = req.query
+    console.log(query)
     const bootcamps = await Bootcamp.find();
     res.status(SUCCESS).json({success:true,count:bootcamps.length, data:bootcamps})
 } )
 
 exports.getBootcamp = asyncHandler(async(req,res,next) => {
-
         const id = req.params.id;
         const bootcamp = await Bootcamp.findById(id)
         if(bootcamp == null){
@@ -74,8 +74,6 @@ exports.getBootcampsByRadius = asyncHandler(async(req,res,next) => {
         }
         
     })
-    
-
     // Calc radius using radians
     // Divide dist by radius of Earth
     // Earth Radius = 3,963 mi / 6,378 km
