@@ -6,9 +6,11 @@ const { CREATED, SUCCESS, NOT_FOUND } = require("../Utils/httpConst")
 
 
 exports.getBootcamps = asyncHandler(async(req,res,next) => {    
-    const query = req.query
+    
+    const queryStr= JSON.stringify(req.query).replace(/\b(gt|lt|lte|gte|in)\b/g, match => `$${match}`);
+    const query = JSON.parse(queryStr)
     console.log(query)
-    const bootcamps = await Bootcamp.find();
+    const bootcamps = await Bootcamp.find(query);
     res.status(SUCCESS).json({success:true,count:bootcamps.length, data:bootcamps})
 } )
 
