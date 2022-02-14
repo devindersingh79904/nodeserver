@@ -7,6 +7,7 @@ dotenv.config({ path: './config/config.env'});
 //Route files
 
 const bootcamps = require('./routes/bootcamps');
+const courses = require('./routes/courses');
 const DBConnect = require('./middleware/db');
 const errorHandler = require('./middleware/errorhandler');
 
@@ -21,6 +22,7 @@ if(process.env.NODE_ENV === 'development'){
 
 app.use(express.json())
 app.use('/api/v1/bootcamps',bootcamps)
+app.use('/api/v1/courses',courses)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 8000
