@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 dotenv.config({path:'./config/config.env'})
 
 const Bootcamp = require('./models/Bootcamp')
-const Couse = require('./models/Bootcamp');
 const Course = require('./models/Course');
 const DBConnect = async() => {
     try {
@@ -41,7 +40,7 @@ const deleteData = async ()=>
 {
     try{
         await Bootcamp.deleteMany();
-        await Couse.deleteMany();
+        await Course.deleteMany();
         console.log(`Data deleted....`.red.inverse)
         process.exit();
     }
