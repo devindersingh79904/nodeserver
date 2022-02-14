@@ -6,11 +6,34 @@ const { CREATED, SUCCESS, NOT_FOUND } = require("../Utils/httpConst")
 
 
 exports.getBootcamps = asyncHandler(async(req,res,next) => {    
+    let query;
+    //create a copy of query
+    const reqQuery = {...req.query}
     
-    const queryStr= JSON.stringify(req.query).replace(/\b(gt|lt|lte|gte|in)\b/g, match => `$${match}`);
-    const query = JSON.parse(queryStr)
-    console.log(query)
-    const bootcamps = await Bootcamp.find(query);
+    //fields to exclude
+    const removeFields = ['select','sort']
+    console.log(reqQuery)
+    removeFields.forEach( param => delete reqQuery[param])
+    console.log(reqQuery)
+    //append $ sign front of operator(gt,lt,gte,lte,in)
+    
+    const queryStr= JSON.stringify(reqQuery).replace(/\b(gt|lt|lte|gte|in)\b/g, match => `$${match}`);
+    query =  Bootcamp.find(JSON.parse(queryStr));
+    
+    if(req.query.select){
+        const fields = req.query.select.split(',').join(' ')
+        query = query.select(fields)
+    }
+    
+    if(req.query.sort){
+        const sortBy = req.query.sort.split(',').join(' ')
+        query = query.sort(sortBy)
+    }
+    else{
+        const sortBy = '-createdAt'
+        query = query.sort(sortBy)
+    }
+    const bootcamps = await query;
     res.status(SUCCESS).json({success:true,count:bootcamps.length, data:bootcamps})
 } )
 
