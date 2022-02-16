@@ -1,7 +1,7 @@
 const asyncHandler = require("./asyncHandler");
 
 const advancedResult = (model,populate) =>async (req,res,next) => {
-    
+    //declare empty query
     let query;
     //create a copy of query
     const reqQuery = {...req.query}
