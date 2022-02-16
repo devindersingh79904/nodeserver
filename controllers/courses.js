@@ -112,6 +112,6 @@ exports.deleteCourse = asyncHandler(async(req,res,next) => {
         return next(new ErrorResponse( `no course with id of ${id}`,NOT_FOUND))
     }
 
-    course.remove();
+    await course.remove();
     res.status(SUCCESS).json({success:true,msg:'bootcamp deleted succesfully'})
 })
