@@ -73,5 +73,45 @@ exports.addCourse = asyncHandler(async(req,res,next) => {
         return next(new ErrorResponse( `unable to create new course`,BAD_REQUEST))
     }
 
+    res.status(CREATED).json({success:true,data:course})
+})
+
+
+
+
+//@desc     update courses
+//@route    PUT /api/v1/courses/:id
+//@access   private
+exports.updateCourse = asyncHandler(async(req,res,next) => {    
+    
+    const id = req.params.id
+    let course = await Course.findById(id);
+    if(course == null){
+        return next(new ErrorResponse( `no course with id of ${id}`,NOT_FOUND))
+    }
+
+    course = await Course.findByIdAndUpdate(id,req.body,{
+        new:true,
+        runValidators:true
+    });
+
     res.status(SUCCESS).json({success:true,data:course})
+})
+
+
+
+//@desc delete courses
+//@route DELETE /api/v1/courses/:id
+//@access private
+
+exports.deleteCourse = asyncHandler(async(req,res,next) => {    
+    
+    const id = req.params.id
+    let course = await Course.findById(id);
+    if(course == null){
+        return next(new ErrorResponse( `no course with id of ${id}`,NOT_FOUND))
+    }
+
+    course.remove();
+    res.status(SUCCESS).json({success:true,msg:'bootcamp deleted succesfully'})
 })
