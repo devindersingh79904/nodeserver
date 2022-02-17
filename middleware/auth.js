@@ -5,8 +5,6 @@ const {NOT_FOUND,FORBIDDEN_REQUEST, NOT_AUTHENTICATED} = require('../Utils/httpC
 
 exports.protect = async(req,res,next)=>{
     let token
-    console.log("i am here")
-    console.log(req.headers)
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
         token = req.headers.authorization.split(' ')[1]
     }
