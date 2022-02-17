@@ -4,7 +4,7 @@ const coursesRouter =  require('./courses')
 const { getBootcamps, getBootcamp, postBootcamp, putBootcamp, deleteBootcamp, getBootcampsByRadius, bootcampPhotoUpload } = require('../controllers/bootcamps');
 const advancedResult = require('../middleware/advanceResult');
 const Bootcamp = require('../models/Bootcamp');
-const protect = require('../middleware/auth');
+const {protect} = require('../middleware/auth');
 
 const router = express.Router();
 
