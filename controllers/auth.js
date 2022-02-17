@@ -56,6 +56,26 @@ exports.getMe = asyncHandler(async(req,res,next) => {
 })
 
 
+//@desc     forget password
+//@route    GET /api/v1/auth/forgetpassword
+//@acces]s  PUBLIC
+exports.forgetPassword = asyncHandler(async(req,res,next) => {    
+
+    const {email} = req.body
+    let user = await User.findOne({email})
+    if(!user){
+        return next(new ErrorResponse('There is no user with email',NOT_FOUND))
+    }
+
+    const resetToken = user.getResetPasswordToken()
+
+    user = await user.save({validateBeforeSave:false})
+ //   user = await user.save({validateBeforeSave:false})
+    res.status(SUCCESS).json({sucess:true,data:user,resetToken})
+
+})
+
+
 
 
 
