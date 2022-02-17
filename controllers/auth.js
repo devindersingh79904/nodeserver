@@ -10,8 +10,7 @@ const { CREATED, SUCCESS, NOT_FOUND, BAD_REQUEST, SERVER_ERROR, NOT_AUTHENTICATE
 exports.registerUser = asyncHandler(async(req,res,next) => {    
 
     const user = await User.create(req.body)
-    const token = user.getSignedJwtToken()
-    res.status(SUCCESS).json({sucess:true,token})
+    sendTokenResponse(user,SUCCESS,res)
 })
 
 
@@ -39,8 +38,7 @@ exports.loginUser = asyncHandler(async(req,res,next) => {
     }
 
     
-    const token = user.getSignedJwtToken()
-    res.status(SUCCESS).json({sucess:true,token})
+   sendTokenResponse(user,SUCCESS,res)
 
 })
 
@@ -56,3 +54,30 @@ exports.getMe = asyncHandler(async(req,res,next) => {
     res.status(SUCCESS).json({sucess:true,data:user})
 
 })
+
+
+
+
+
+
+
+
+//get jwt token and create cookie and set response
+const sendTokenResponse = (user,statusCode,res)=>{
+
+    const token = user.getSignedJwtToken()
+    const options = {
+      expires: new Date( Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60  * 1000),
+      httpOnly:true
+    }
+
+    if(process.env.NODE_ENV == 'production'){
+        options.secure=true
+    }
+    res.status(statusCode)
+    .cookie('token',token,options)
+    .json(
+      {sucess:true,
+        token
+      })
+  }

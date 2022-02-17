@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
 const fileupload = require('express-fileupload');
+const cookieParser = require('cookie-parser')
+
 dotenv.config({ path: './config/config.env'});
 //Route files
 
@@ -19,6 +21,9 @@ DBConnect()
 const app = express();
 
 app.use(express.json())
+
+//cookieParser
+app.use(cookieParser())
 
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));
