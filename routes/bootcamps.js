@@ -14,7 +14,7 @@ router.use("/:bootcampId/courses",coursesRouter)
 
 router.route('/radius/:zipcode/:distance').get(getBootcampsByRadius)
 
-router.route("/:id/photo").put(bootcampPhotoUpload)
+router.route("/:id/photo").put(protect,authorize('publisher','admin'),bootcampPhotoUpload)
 
 router.route("/").get(advancedResult(Bootcamp,{
     path:'courses',

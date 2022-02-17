@@ -22,6 +22,8 @@ const app = express();
 
 app.use(express.json())
 
+// File uploading
+app.use(fileupload());
 //cookieParser
 app.use(cookieParser())
 
@@ -31,8 +33,7 @@ if(process.env.NODE_ENV === 'development'){
 
 
 
-// File uploading
-app.use(fileupload());
+
 app.use(express.static(path.join(__dirname,'public')))
 
 app.use('/api/v1/bootcamps',bootcamps)
