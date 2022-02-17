@@ -2,7 +2,7 @@ const asyncHandler = require("../middleware/asyncHandler")
 const Course = require("../models/Course")
 const Bootcamp = require('../models/Bootcamp')
 const ErrorResponse = require("../Utils/ErrorResponse")
-const { CREATED, SUCCESS, NOT_FOUND, BAD_REQUEST } = require("../Utils/httpConst")
+const { CREATED, SUCCESS, NOT_FOUND, BAD_REQUEST ,NOT_AUTHENTICATED } = require("../Utils/httpConst")
 
 
 //@desc Get courses
@@ -27,10 +27,10 @@ exports.getCourses = asyncHandler(async(req,res,next) => {
 //@desc Get courses
 //@route GET /api/v1/courses/:id
 //@access Public
-
 exports.getCourse = asyncHandler(async(req,res,next) => {    
     
     const id = req.params.id
+
     const course =await Course.findById(id).populate({
             path : 'bootcamp',
             select : 'name description'
@@ -51,16 +51,19 @@ exports.getCourse = asyncHandler(async(req,res,next) => {
 
 exports.addCourse = asyncHandler(async(req,res,next) => {    
     
-    const id = req.params.bootcampId
-
+    const id = req.params.bootcampId 
     const bootcamp = await Bootcamp.findById(id)
 
     if(bootcamp == null){
         return next(new ErrorResponse( `Bootcamp with id : ${id} not found`,NOT_FOUND))
     }
+
+    if(bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin' ){
+        return next(new ErrorResponse(`User ${id} is not authorized to add a course to bootcamp ${bootcamp.id}`,NOT_AUTHENTICATED))
+    }
     
     req.body.bootcamp = id
-
+    req.body.user=req.user.id
     const course = await Course.create(req.body);
 
     if(course == null){
@@ -84,6 +87,11 @@ exports.updateCourse = asyncHandler(async(req,res,next) => {
         return next(new ErrorResponse( `no course with id of ${id}`,NOT_FOUND))
     }
 
+    if(course.user.toString() !== req.user.id && req.user.role !== 'admin' ){
+        return next(new ErrorResponse(`User ${id} is not authorized to update a course ${course._id}`,NOT_AUTHENTICATED))
+    }
+
+
     course = await Course.findByIdAndUpdate(id,req.body,{
         new:true,
         runValidators:true
@@ -106,6 +114,9 @@ exports.deleteCourse = asyncHandler(async(req,res,next) => {
         return next(new ErrorResponse( `no course with id of ${id}`,NOT_FOUND))
     }
 
+    if(course.user.toString() !== req.user.id && req.user.role !== 'admin' ){
+        return next(new ErrorResponse(`User ${id} is not authorized to delete a course ${course._id}`,NOT_AUTHENTICATED))
+    }
     await course.remove();
     res.status(SUCCESS).json({success:true,msg:'bootcamp deleted succesfully'})
 })
