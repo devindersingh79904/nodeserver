@@ -3,7 +3,7 @@ const Bootcamp = require("../models/Bootcamp")
 const ErrorResponse = require("../Utils/ErrorResponse")
 const geocoder = require("../Utils/geocoder")
 const path = require('path')
-const { CREATED, SUCCESS, NOT_FOUND, BAD_REQUEST, SERVER_ERROR } = require("../Utils/httpConst")
+const { CREATED, SUCCESS, NOT_FOUND, BAD_REQUEST, SERVER_ERROR ,NOT_AUTHENTICATED } = require("../Utils/httpConst")
 
 
 exports.getBootcamps = asyncHandler(async(req,res,next) => {    
@@ -22,7 +22,17 @@ exports.getBootcamp = asyncHandler(async(req,res,next) => {
 })
 
 exports.postBootcamp = asyncHandler(async(req,res,next) => {
+
+        req.body.user = req.user.id
+
+        const publishedBootcamp = await Bootcamp.findOne({user:req.user.id});
+
+        if(publishedBootcamp && req.user.role != 'admin'){
+            return next(new ErrorResponse(`The user with Id ${req.user.id} has already published a bootcamp`,BAD_REQUEST))
+        }
+
         const bootcamp = await Bootcamp.create(req.body)
+        
         console.log(`${bootcamp}`.cyan)
         if(bootcamp == null){
             return next(new ErrorResponse('Unable to create bootcamp',404))
@@ -33,15 +43,24 @@ exports.postBootcamp = asyncHandler(async(req,res,next) => {
 })
 
 exports.putBootcamp = asyncHandler(async(req,res,next) => {
+    
     const id = req.params.id;
-    const bootcamp = await Bootcamp.findByIdAndUpdate(id,req.body,{
-        new:true,
-        runValidators:true
-    })
+    
+    let bootcamp = await Bootcamp.findById(id)
 
     if(bootcamp == null){
         return next(new ErrorResponse(`No bootcamp find with id ${id}`,NOT_FOUND))
     }
+
+    if(bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin' ){
+        return next(new ErrorResponse(`User ${req.params.id} is not authorized to update this bootcamp`,NOT_AUTHENTICATED))
+    }
+
+
+    bootcamp = await Bootcamp.findOneAndUpdate(req.params.id,req.body,{
+        new:true,
+        runValidators:true
+    })
     res.status(SUCCESS).json({success:true,data:bootcamp})
 })
 
@@ -52,6 +71,10 @@ exports.deleteBootcamp = asyncHandler(async(req,res,next) => {
 
     if(bootcamp == null){
         return next(new ErrorResponse(`No bootcamp find with id ${id}`,NOT_FOUND))
+    }
+
+    if(bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin' ){
+        return next(new ErrorResponse(`User ${req.params.id} is not authorized to delete this bootcamp`,NOT_AUTHENTICATED))
     }
 
     await bootcamp.remove()

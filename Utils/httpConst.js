@@ -11,5 +11,6 @@ module.exports = {
     SUCCESS,
     BAD_REQUEST,
     NOT_AUTHENTICATED,
-    NOT_FOUND
+    NOT_FOUND,
+    FORBIDDEN_REQUEST
 }

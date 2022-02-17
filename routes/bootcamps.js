@@ -19,9 +19,9 @@ router.route("/:id/photo").put(bootcampPhotoUpload)
 router.route("/").get(advancedResult(Bootcamp,{
     path:'courses',
     select : 'title'
-}),getBootcamps).post(protect,authorize('publisher'), postBootcamp)
+}),getBootcamps).post(protect,authorize('publisher','admin'), postBootcamp)
 
-router.route("/:id").get(getBootcamp).put(protect,putBootcamp).delete(protect,deleteBootcamp)
+router.route("/:id").get(getBootcamp).put(protect,authorize('publisher','admin'),putBootcamp).delete(protect,authorize('publisher','admin'),deleteBootcamp)
 
 
 module.exports = router
