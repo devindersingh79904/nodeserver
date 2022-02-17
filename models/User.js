@@ -1,7 +1,7 @@
 // const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 // const randomize = require('randomatic');
 
 const UserSchema = new mongoose.Schema({
@@ -66,10 +66,11 @@ UserSchema.methods.getSignedJwtToken = function () {
   });
 };
 
-// // Match user entered password to hashed password in database
-// UserSchema.methods.matchPassword = async function (enteredPassword) {
-//   return await bcrypt.compare(enteredPassword, this.password);
-// };
+
+// Match user entered password to hashed password in database
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 // Generate and hash password token
 // UserSchema.methods.getResetPasswordToken = function () {
