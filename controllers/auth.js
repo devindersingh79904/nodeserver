@@ -7,7 +7,6 @@ const { CREATED, SUCCESS, NOT_FOUND, BAD_REQUEST, SERVER_ERROR, NOT_AUTHENTICATE
 //@desc     register user
 //@route    POST /api/v1/auth/register
 //@access   Public
-
 exports.registerUser = asyncHandler(async(req,res,next) => {    
 
     const user = await User.create(req.body)
