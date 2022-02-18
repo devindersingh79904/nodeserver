@@ -10,7 +10,7 @@ const errorHandler = (err,req,res,next) => {
     console.log(err.name)
 
     if(err.name === CAST_ERROR){
-        const message = `Bootcamp not found with id ${err.value}`
+        const message = `Resource not found with id ${err.value}`
         error = new ErrorResponse(message,NOT_FOUND)
     }
     else if(err.code === DUPLICATE_KEY_ERROR){
