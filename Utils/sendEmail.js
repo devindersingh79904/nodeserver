@@ -10,7 +10,7 @@ const nodemailer = require("nodemailer");
 // FROM_NAME=Devcamper
 
 
-sendEmail = (options)=> {
+sendEmail = async(options)=> {
   
   let testAccount = await nodemailer.createTestAccount();
 

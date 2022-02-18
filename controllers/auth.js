@@ -1,8 +1,9 @@
+const crypto = require('crypto')
 const asyncHandler = require("../middleware/asyncHandler")
 const User = require("../models/User")
 const ErrorResponse = require("../Utils/ErrorResponse")
 const { CREATED, SUCCESS, NOT_FOUND, BAD_REQUEST, SERVER_ERROR, NOT_AUTHENTICATED } = require("../Utils/httpConst")
-
+const sendEmail = require('../Utils/sendEmail')
 
 //@desc     register user
 //@route    POST /api/v1/auth/register
@@ -70,9 +71,51 @@ exports.forgetPassword = asyncHandler(async(req,res,next) => {
     const resetToken = user.getResetPasswordToken()
 
     user = await user.save({validateBeforeSave:false})
- //   user = await user.save({validateBeforeSave:false})
-    res.status(SUCCESS).json({sucess:true,data:user,resetToken})
 
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+
+  const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Password reset token',
+      message,
+    });
+
+    res.status(200).json({ success: true, data: 'Email sent' });
+  } catch (err) {
+    console.log(err);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(new ErrorResponse('Email could not be sent', 500));
+  }
+ 
+})
+
+
+//@desc     forget password
+//@route    GET /api/v1/auth/resetpassword/:resettoken')
+//@acces]s  PUBLIC
+exports.resetPassword = asyncHandler(async(req,res,next) => {    
+    const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex')
+
+    let user = await User.findOne({resetPasswordToken ,
+      resetPasswordExpire : {
+        $gt : Date.now()
+      } })
+
+    if(!user){
+      return next( new ErrorResponse("Invalid token",BAD_REQUEST))
+    }
+
+    user.password = req.body.password
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    user = await user.save()
+    res.status(SUCCESS).json({sucess:true,data : user})
 })
 
 
