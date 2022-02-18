@@ -94,6 +94,8 @@ exports.updateReview = asyncHandler(async(req,res,next) => {
         runValidators:true
     });
 
+    review.save()
+
     res.status(SUCCESS).json({success:true,data:review})
 })
 
