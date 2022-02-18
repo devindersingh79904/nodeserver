@@ -7,6 +7,9 @@ dotenv.config({path:'./config/config.env'})
 
 const Bootcamp = require('./models/Bootcamp')
 const Course = require('./models/Course');
+const Review = require('./models/Review')
+const User = require('./models/User');
+
 const DBConnect = async() => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI)
@@ -20,11 +23,16 @@ DBConnect();
 
 const bootcamps = JSON.parse(fs.readFileSync(`${__dirname}/_data/bootcamps.json`,'utf-8'))
 const courses = JSON.parse(fs.readFileSync(`${__dirname}/_data/courses.json`,'utf-8'))
+const reviews = JSON.parse(fs.readFileSync(`${__dirname}/_data/reviews.json`,'utf-8'))
+const users = JSON.parse(fs.readFileSync(`${__dirname}/_data/users.json`,'utf-8'))
 const importData = async ()=>
 {
     try{
+
+        await User.create(users)
         await Bootcamp.create(bootcamps);
         await Course.create(courses);
+        await Review.create(reviews)
 
         console.log(`Data imported....`.green.inverse)
         process.exit();
@@ -39,8 +47,10 @@ const importData = async ()=>
 const deleteData = async ()=>
 {
     try{
-        await Bootcamp.deleteMany();
+        await Review.deleteMany()
         await Course.deleteMany();
+        await Bootcamp.deleteMany();
+        await User.deleteMany();
         console.log(`Data deleted....`.red.inverse)
         process.exit();
     }

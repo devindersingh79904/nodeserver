@@ -118,5 +118,5 @@ exports.deleteCourse = asyncHandler(async(req,res,next) => {
         return next(new ErrorResponse(`User ${id} is not authorized to delete a course ${course._id}`,NOT_AUTHENTICATED))
     }
     await course.remove();
-    res.status(SUCCESS).json({success:true,msg:'bootcamp deleted succesfully'})
+    res.status(SUCCESS).json({success:true,msg:'course deleted succesfully'})
 })
