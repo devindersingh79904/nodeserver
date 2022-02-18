@@ -57,6 +57,46 @@ exports.getMe = asyncHandler(async(req,res,next) => {
 })
 
 
+//@desc     update user details
+//@route    PUT /api/v1/auth/updatedetails
+//@acces]s  Private
+exports.updateUserDetails = asyncHandler(async(req,res,next) => {    
+
+  const fieldsToUpdate= {
+    name:req.body.name
+  }
+  const user = await User.findByIdAndUpdate(req.user._id,fieldsToUpdate,{
+    new:true,
+    runValidators:true
+  })
+
+  if(!user){
+    return next(new ErrorResponse('updation failed',BAD_REQUEST))
+  }
+
+  res.status(SUCCESS).json({sucess:true,data:user})
+
+})
+
+
+//@desc     update user password
+//@route    PUT /api/v1/auth/updatepassword
+//@acces]s  Private
+exports.updateUserPassword = asyncHandler(async(req,res,next) => {    
+
+  let user = await User.findById(req.user._id).select("+password")
+  
+  if(!await user.matchPassword(req.body.currentpassword)){
+    return next(new ErrorResponse("Password is incorrect",BAD_REQUEST))
+  }
+
+  user.password = req.body.password;
+  user = await user.save()
+
+  sendTokenResponse(user,SUCCESS,res)
+
+})
+
 //@desc     forget password
 //@route    GET /api/v1/auth/forgetpassword
 //@acces]s  PUBLIC
@@ -95,7 +135,7 @@ exports.forgetPassword = asyncHandler(async(req,res,next) => {
 })
 
 
-//@desc     forget password
+//@desc     rest password password
 //@route    GET /api/v1/auth/resetpassword/:resettoken')
 //@acces]s  PUBLIC
 exports.resetPassword = asyncHandler(async(req,res,next) => {    
