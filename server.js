@@ -5,7 +5,9 @@ const morgan = require('morgan');
 const colors = require('colors');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser')
-
+const sanatize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+const xss = require('xss-clean')
 dotenv.config({ path: './config/config.env'});
 //Route files
 
@@ -28,6 +30,12 @@ app.use(express.json())
 app.use(fileupload());
 //cookieParser
 app.use(cookieParser())
+
+app.use(sanatize())
+
+app.use(helmet())
+
+app.use(xss())
 
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));

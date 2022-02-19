@@ -62,7 +62,10 @@ exports.getMe = asyncHandler(async(req,res,next) => {
 exports.logoutMe = asyncHandler(async(req,res,next) => {    
 
   res.status(SUCCESS)
-    .cookie('token','none')
+    .cookie('token','none',{
+      expires:new Date(Date.now() + 10 * 1000),
+      httpOnly:true
+    })
     .json(
       {
         sucess:true,
