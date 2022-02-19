@@ -8,6 +8,9 @@ const cookieParser = require('cookie-parser')
 const sanatize = require('express-mongo-sanitize')
 const helmet = require('helmet')
 const xss = require('xss-clean')
+const rateLimter = require('express-rate-limit')
+const hpp = require('hpp')
+const cors = require('cors')
 dotenv.config({ path: './config/config.env'});
 //Route files
 
@@ -31,12 +34,28 @@ app.use(fileupload());
 //cookieParser
 app.use(cookieParser())
 
+//prevent sql injection
 app.use(sanatize())
 
+//add header
 app.use(helmet())
 
+//prevent html tag in data
 app.use(xss())
 
+//prevent send array in http polution
+app.use(hpp())
+
+const limiter = rateLimter({
+    windowMS:10 * 60 * 1000,
+    max : 100
+})
+
+app.use(limiter)
+
+
+//allow cors
+app.use(cors())
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));
 }
