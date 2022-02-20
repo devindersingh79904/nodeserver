@@ -46,12 +46,14 @@ app.use(xss())
 //prevent send array in http polution
 app.use(hpp())
 
-const limiter = rateLimter({
-    windowMS:10 * 60 * 1000,
-    max : 100
-})
 
-app.use(limiter)
+// //add limter to route
+// const limiter = rateLimter({
+//     windowMS:10 * 60 * 1000,
+//     max : 100
+// })
+
+// app.use(limiter)
 
 
 //allow cors
