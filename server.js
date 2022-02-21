@@ -66,6 +66,9 @@ if(process.env.NODE_ENV === 'development'){
 
 app.use(express.static(path.join(__dirname,'public')))
 
+app.get("/",(req,res,next)=>{
+    res.json({msg : "I am working"});
+})
 app.use('/api/v1/bootcamps',bootcamps)
 app.use('/api/v1/courses',courses)
 app.use('/api/v1/auth',auth)
